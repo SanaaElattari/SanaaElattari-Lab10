@@ -9,29 +9,26 @@ public class WordCounter {
 
     public static int processText(StringBuffer s, String stopword) throws TooSmallText, InvalidStopwordException
     {   
-        // add another counter 
-        int count = 0; // whole phrase word count 
-        int counterToStopword = 0; // count until stopword found
+        int count = 0; 
         boolean found = false;
+
         if(stopword == null)
         {
-            found = true;
+            found = true; // if stop word don't need to look
         }
 
         Pattern regex = Pattern.compile("[a-zA-Z0-9']+");
         Matcher matcher = regex.matcher(s.toString());
 
-        
-        
         while (matcher.find()) {
+
             String word = matcher.group();
+            count++;
             
-            if (stopword != null && word.equals(stopword)) {
+            if (stopword != null && word.equals(stopword) && count >= 5) {
                 found = true;
                 break; // stop counting when stopword found
             }
-
-            count++;
         }
 
         if(count < 5)
@@ -61,47 +58,63 @@ public class WordCounter {
         StringBuffer content = new StringBuffer();
         try {
             Scanner reader = new Scanner(file);
+            if (!reader.hasNextLine()) {
+                reader.close();
+                throw new EmptyFileException(file.getName() + " was empty");
+            }
             while (reader.hasNextLine()) {
-                content.append(reader.nextLine()).append(" ");
+                content.append(reader.nextLine());
+                if (reader.hasNextLine()) content.append(" ");
             }
             reader.close();
         } catch (FileNotFoundException e) {
-            // probs wont reach here 
+            // shouldn't happen due to loop above
         }
-
+    
         if (content.length() == 0) {
             throw new EmptyFileException(file.getName() + " was empty");
         }
-
+    
         return content;
+    
     }
 
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        StringBuffer text = new StringBuffer();
-        String stopword = (args.length > 1) ? args[1] : null;
-        int option = 0;
+public static void main(String[] args) {
+    Scanner input = new Scanner(System.in);
+    StringBuffer text = new StringBuffer();
+    String stopword = null; 
+    int option = 0;
 
-        // ask until valid
-        while (option != 1 && option != 2) {
-            System.out.println("Enter 1 to process a file or 2 to enter text directly:");
-            try {
-                option = Integer.parseInt(input.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid option. Try again.");
-            }
+    if(args.length > 1)
+        {
+            stopword = args[1];
         }
 
+        // ask until valid
+    while (option != 1 && option != 2) {
+        System.out.println("Enter 1 to process a file or 2 to enter text directly:");
         try {
-            if (option == 1) {
-                String path = args.length > 0 ? args[0] : "";
-                try {
-                    text = processFile(path);
+            option = Integer.parseInt(input.nextLine());
+        } catch (NumberFormatException e) {
+                System.out.println("Invalid option. Try again.");
+        }
+        }
+
+    try {
+        if (option == 1) {
+            String path = "";
+            if (args.length > 0) {
+                path = args[0];
+            }
+
+            try {
+                text = processFile(path);
                 } catch (EmptyFileException e) {
                     System.out.println(e);
-                    text = new StringBuffer(""); // continue with empty string
+                    text = new StringBuffer("");
                 }
-            } else {
+
+            } else if (option == 2) {
                 System.out.println("Enter your text:");
                 text = new StringBuffer(input.nextLine());
             }

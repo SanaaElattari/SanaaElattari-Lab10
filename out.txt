@@ -1,0 +1,2 @@
+Enter 1 to process a file or 2 to enter text directly:
+TooSmallText: Only found 2 words.
