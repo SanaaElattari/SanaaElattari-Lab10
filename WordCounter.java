@@ -20,12 +20,14 @@ public class WordCounter {
         Pattern regex = Pattern.compile("[a-zA-Z0-9']+");
         Matcher matcher = regex.matcher(s.toString());
 
-        while (matcher.find()) {
+        while (matcher.find()) 
+        {
 
             String word = matcher.group();
             count++;
             
-            if (stopword != null && word.equals(stopword) && count >= 5) {
+            if (stopword != null && word.equals(stopword) && count >= 5) 
+            {
                 found = true;
                 break; // stop counting when stopword found
             }
@@ -47,31 +49,37 @@ public class WordCounter {
     //chweck this method 
     public static StringBuffer processFile(String path) throws EmptyFileException {
         Scanner input = new Scanner(System.in);
-        File file = new File(path);
+        File file = new File(path );
 
-        while (!file.exists()) {
+        while (!file.exists()) 
+        {
             System.out.println("Enter a valid filename:");
             path = input.nextLine();
             file = new File(path);
         }
 
         StringBuffer content = new StringBuffer();
-        try {
+        try 
+        {
             Scanner reader = new Scanner(file);
-            if (!reader.hasNextLine()) {
+            if (!reader.hasNextLine()) 
+            {
                 reader.close();
                 throw new EmptyFileException(file.getName() + " was empty");
             }
-            while (reader.hasNextLine()) {
+            while (reader.hasNextLine()) 
+            {
                 content.append(reader.nextLine());
                 if (reader.hasNextLine()) content.append(" ");
             }
             reader.close();
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) 
+        {
             // shouldn't happen due to loop above
         }
     
-        if (content.length() == 0) {
+        if (content.length() == 0)
+        {
             throw new EmptyFileException(file.getName() + " was empty");
         }
     
@@ -93,17 +101,21 @@ public static void main(String[] args) {
         // ask until valid
     while (option != 1 && option != 2) {
         System.out.println("Enter 1 to process a file or 2 to enter text directly:");
-        try {
+        try 
+        {
             option = Integer.parseInt(input.nextLine());
         } catch (NumberFormatException e) {
-                System.out.println("Invalid option. Try again.");
+            System.out.println("Invalid option. Try again.");
         }
         }
 
-    try {
-        if (option == 1) {
+    try
+    {
+        if (option == 1) 
+        {
             String path = "";
-            if (args.length > 0) {
+            if (args.length > 0) 
+            {
                 path = args[0];
             }
 
